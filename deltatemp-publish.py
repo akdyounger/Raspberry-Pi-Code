@@ -119,10 +119,10 @@ print 'Pin 3:', read_adc2
 
 
 #Twiiter Parts
-CONSUMER_KEY = 'hkyM20b8fWBVRplGg5pH1g'
-CONSUMER_SECRET = 'KilzlrQDvKNlU8rpvnVA3kBdXoGO6FpzDSHGz8hB21w'
-ACCESS_KEY = '1599828776-UDQ4B9PqEmrVKot6LVvNdb4sQ8vFiRe1KSz9bIM'
-ACCESS_SECRET = 'RXKFDEdrFgtdlx01v0HQyLqHQAFMvQLlUryCpRqodE'
+CONSUMER_KEY = '###'
+CONSUMER_SECRET = '###'
+ACCESS_KEY = '###'
+ACCESS_SECRET = '###'
 
 devicename = "Pi Farm" # make yours different, say, "Pi"
 ## Setup today
