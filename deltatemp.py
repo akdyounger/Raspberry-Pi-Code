@@ -70,8 +70,8 @@ adcl1 = 2
 
 
 
-    #while True:
-    # read the analog pin (temperature sensor LM35)
+#while True:
+# read the analog pin (temperature sensor LM35)
 read_adc0 = readadc(adct1, SPICLK, SPIMOSI, SPIMISO, SPICS)
 read_adc1 = readadc(adct2, SPICLK, SPIMOSI, SPIMISO, SPICS)
 read_adc2 = readadc(adcl1, SPICLK, SPIMOSI, SPIMISO, SPICS)
@@ -85,8 +85,21 @@ c_temp1 = (((read_adc1 * ( 3300.0 / 1024.0)) - 100.0) / 10.0) - 40.0
 f_temp0 = ((c_temp0 * (9.0/5.0)) + 32.0)
 f_temp1 = ((c_temp1 * (9.0/5.0)) + 32.0)
 
+#raw values
 f_tempreal0 = "%.1F" % f_temp0
 f_tempreal1 = "%.1F" % f_temp1
+
+#for delta calculations
+delta = f_temp1 - f_temp0
+
+
+if -2 <= delta <= 2:
+    deltatweet = 'The greenhouse is about the same temperature as outside, at'
+elif delta < 2:
+    deltatweet = 'The greenhouse is keeping the environment colder than outside, at'
+elif -2 < delta:
+    deltatweet = 'The greenhouse is keeping the environment warmer than outside, at'
+
 
 
 
@@ -104,24 +117,14 @@ print 'Pin 2:', read_adc1
 print 'Pin 3:', read_adc2
 
 
-if read_adc1 in range(0, 100):
-    print "Time to turn on the lights!" # dark
-if read_adc1 in range(101, 250):
-    print "Running our of light, might have to turn on the lights soon..." # indoor room light levels, not very bright
-if read_adc1 in range(251, 500):
-    print "Plenty of light :)" # fairly bright, good growing levels
-if read_adc1 in range(501, 1023):
-    print "Woah, where is the sunblock?" # Tons of light, yay!
 
-
-
-
+#Twiiter Parts
 CONSUMER_KEY = 'hkyM20b8fWBVRplGg5pH1g'
 CONSUMER_SECRET = 'KilzlrQDvKNlU8rpvnVA3kBdXoGO6FpzDSHGz8hB21w'
 ACCESS_KEY = '1599828776-UDQ4B9PqEmrVKot6LVvNdb4sQ8vFiRe1KSz9bIM'
 ACCESS_SECRET = 'RXKFDEdrFgtdlx01v0HQyLqHQAFMvQLlUryCpRqodE'
 
-devicename = "Evanston Pi" # make yours different, say, "Pi"
+devicename = "Pi Farm" # make yours different, say, "Pi"
 ## Setup today
 today = datetime.datetime.now()
 
@@ -139,8 +142,13 @@ auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
 api = tweepy.API(auth)
 
 
-#The Tweet!
-TweetStatus = "%s [%s.%s] CPU: %s F. Room: %s F. Greenhouse is %s F. Light level is %s %%. " % (devicename, today.minute, today.second, coretempf, f_tempreal0, f_tempreal1, light)
+#The Tweets!
+#Diagnostic tweet
+#TweetStatus = "%s [%s.%s] CPU: %s F. Room: %s F. Greenhouse is %s F. Light level is %s %% of max. " % (devicename, today.minute, today.second, coretempf, f_tempreal0, f_tempreal1, light)
+
+
+#More complex tweet
+TweetStatus = "%s [%s.%s] CPU: %s F. %s %s F. Light level is %s %% of max. " % (devicename, today.minute, today.second, coretempf, deltatweet, f_tempreal1, light)
 
 status = TweetStatus
 
